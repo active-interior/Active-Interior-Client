@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.main_container{
+  background: linear-gradient(180deg, #0E2433, #1A3A4A);
+  height: 100vh;
+  color: white;
+}
+.logo{
+  filter: drop-shadow(0 0 20px rgba(255, 191, 0, 0.35));
+}
