@@ -1,21 +1,18 @@
 import React from 'react';
-import { MdOutlineCompareArrows } from 'react-icons/md';
 
-const Home = () => {
+const ConstructionHome = () => {
     return (
         <div className='h-[90vh] '>
             <div className='h-full flex flex-col gap-10 items-center justify-center'>
                 <div>
                     {/* <h1 id='test-text'>ACTIVE</h1> */}
                 </div>
-                <div className='flex items-center justify-center gap-10'>
+                <div className='flex items-center justify-center'>
                     <img className='h-96 logo' src="https://i.ibb.co.com/S4FFJCcf/logo-1.png" alt="" />
-                    <MdOutlineCompareArrows className='text-[100px] logo' />
-                    <img className='h-96 logo' src="https://i.ibb.co.com/1fVsjZsJ/logo-2.png" alt="" />
                 </div>
             </div>
         </div>
     );
 };
 
-export default Home;
+export default ConstructionHome;

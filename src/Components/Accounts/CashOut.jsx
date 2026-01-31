@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Staffs = () => {
+const CashOut = () => {
     return (
         <div>
-            This is Staffs page
+            This is Cash Out Page
         </div>
     );
 };
 
-export default Staffs;
+export default CashOut;

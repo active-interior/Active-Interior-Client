@@ -5,7 +5,7 @@ import Navbar from '../Navbar/Navbar';
 
 const Main = () => {
     return (
-        <div className='main_container'>
+        <div className='main_container px-5 scrollbar-handle'>
             <Navbar></Navbar>
             <Outlet></Outlet>
         </div>

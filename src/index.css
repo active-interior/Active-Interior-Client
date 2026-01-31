@@ -1,10 +1,126 @@
 @import "tailwindcss";
 
-.main_container{
+.main_container {
   background: linear-gradient(180deg, #0E2433, #1A3A4A);
   height: 100vh;
   color: white;
 }
-.logo{
+
+.logo {
   filter: drop-shadow(0 0 20px rgba(255, 191, 0, 0.35));
+}
+
+.nav_shadow {
+  box-shadow: rgba(255, 191, 0, 0.35);
+}
+
+.zalando-sans-expanded {
+  font-family: "Zalando Sans Expanded", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.bad-script-regular {
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.scrollbar-handle::-webkit-scrollbar {
+  display: none;
+}
+
+#scrollbar-x::-webkit-scrollbar {
+  height: 8px;
+}
+
+#scrollbar-x::-webkit-scrollbar-thumb {
+  border: 1.5px solid #FFBF00;
+  background: transparent;
+  border-radius: 10px;
+}
+
+#scrollbar-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bg_theme {
+  background: linear-gradient(180deg, #0E2433, #1A3A4A);
+}
+
+
+
+#test-text {
+  font-family: "Quintessential", serif;
+  font-size: 200px;
+  text-align: center;
+  line-height: 200px;
+  letter-spacing: 20px;
+  background-image: url('https://img.freepik.com/free-photo/construction-site-sunset_23-2152006125.jpg?semt=ais_hybrid&w=740&q=80');
+  background-size: cover;
+  background-clip: text;
+  color: transparent;
+  animation: animate 30s linear infinite;
+  font-weight: 900;
+}
+
+@keyframes animate {
+  to {
+    background-position-x: -500px;
+  }
+}
+
+
+/* ------------- Date Picker Style ------------------- */
+
+.custom-date {
+  font-size: 14px;
+  color: #ffbf00;
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+}
+
+/* Hide calendar icon (Chrome / Edge / Safari) */
+.custom-date::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  color: #FFBF00;
+  background-color: #FFBF00;
+  background: url('https://img.freepik.com/free-photo/construction-site-sunset_23-2152006125.jpg?semt=ais_hybrid&w=740&q=80');
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------- */
+
+.btn-style {
+  background-color: #1A3A4A;
+  border: 2px solid #FFBF00;
+  color: #FFBF00;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: ease-in-out 0.2s;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.btn-style:hover {
+  background-color: #FFBF00;
+  color: #1A3A4A;
+}
+
+.btn-cancel {
+  background-color: #1A3A4A;
+  border: 2px solid #FFBF00;
+  color: red;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+}
+.btn-cancel:hover {
+  background-color: #FFBF00;
+  color: red;
 }
