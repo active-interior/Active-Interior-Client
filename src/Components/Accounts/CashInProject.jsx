@@ -15,7 +15,7 @@ const CashInProject = () => {
 
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:3000/transaction_sl_no')
+        fetch('https://active-interior-f9hq.onrender.com/transaction_sl_no')
             .then(res => res.json())
             .then(data => {
                 setTransactionSL(data.sl_no + 1);
@@ -24,7 +24,7 @@ const CashInProject = () => {
     }, []);
     useEffect(() => {
         setLoading(true);
-        fetch(`http://localhost:3000/construction_projects`)
+        fetch(`https://active-interior-f9hq.onrender.com/construction_projects`)
             .then(res => res.json())
             .then(data => {
                 setProjects(data);
@@ -56,8 +56,12 @@ const CashInProject = () => {
         const date = currentDate;
         const transaction_no = transactionSL;
         const project = projects.find(prn => prn.project_name === project_name);
+
         const transactionData = { transaction_no, date, payer_name, payment_method, receiving_place, amount };
-        const reveneuData = { date, category: 'Project Payment', reference: project_name, amount };
+        const projectPaymentData = { transaction_no, date, payer_name, project_name, payment_method, receiving_place, amount, total_received_amount: (totalReceivedAmount * 1) + amount };
+        const reveneuData = { date, category: 'Project Payment', reference: [transaction_no], amount, type: "Cash In" };
+        const revenueTransaction = { transaction_no, date: currentDate, transaction_with: payer_name, description: selectedProjectName, category: 'Project Payment', amount }
+
         if (!payer_name || !project_name || !receiving_place || !payment_method || !amount) {
             Swal.fire({
                 position: "center",
@@ -66,38 +70,68 @@ const CashInProject = () => {
                 showConfirmButton: false,
                 timer: 1500
             });
+            setLoading(false);
             return
         }
-        fetch(`http://localhost:3000/project_cash_in/${project?._id}`, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(transactionData)
-        })
-            .then(res => res.json())
-            .then(data => {
-                fetch(`http://localhost:3000/revenue_transactions`, {
+        Swal.fire({
+            title: `${amount} Taka To ${selectedProjectName}?`,
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`https://active-interior-f9hq.onrender.com/project_cash_in/${project?._id}`, {
                     method: 'PATCH',
                     headers: {
                         'content-type': 'application/json'
                     },
-                    body: JSON.stringify(reveneuData)
-                }).then(res => res.json()).then(rvData => {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Payment Received Successfully",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        setLoading(false);
-                        navigate(0);
-                    })
+                    body: JSON.stringify(transactionData)
                 })
-            })
-
-        // console.log(project, transactionData);
+                    .then(res => res.json())
+                    .then(data => {
+                        fetch(`https://active-interior-f9hq.onrender.com/projects_payment`, {
+                            method: 'PATCH',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify(projectPaymentData)
+                        }).then(res => res.json()).then(data => {
+                            fetch(`https://active-interior-f9hq.onrender.com/revenue_transactions`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify(reveneuData)
+                            }).then(res => res.json()).then(() => {
+                                fetch(`https://active-interior-f9hq.onrender.com/revenues`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify(revenueTransaction)
+                                }).then(res => res.json()).then(() => {
+                                    fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`, { method: 'PATCH' }).then(() => {
+                                        Swal.fire({
+                                            position: "center",
+                                            icon: "success",
+                                            title: "Payment Received Successfully",
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        }).then(() => {
+                                            setLoading(false);
+                                            navigate(0);
+                                        })
+                                    })
+                                })
+                            })
+                        })
+                    })
+            }
+        });
     }
 
     const payerName = useRef();
@@ -105,7 +139,6 @@ const CashInProject = () => {
     const receivingPlace = useRef();
     const paymentMethod = useRef();
     const transactionAmount = useRef();
-    const additionalComments = useRef();
     return (
         <div className='h-full'>
             <div className={`${loading ? 'flex' : 'hidden'} items-center justify-center w-full h-full`}>
@@ -122,6 +155,7 @@ const CashInProject = () => {
             </div>
             <div className={`p-7 ${loading ? 'hidden' : ''}`}>
                 <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>Cash In</h1>
+                <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>From Projects</h1>
                 <div>
                     <div className='flex items-center justify-between'>
                         <div>

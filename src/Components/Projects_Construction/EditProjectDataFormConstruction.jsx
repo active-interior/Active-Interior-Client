@@ -14,7 +14,7 @@ const EditProjectDataFormConstruction = () => {
     const [reload, setReload] = useState(false);
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_projects/${id}`).then(res => res.json()).then(data => { setProject(data); setUsedMaterials(data.used_materials); setLoading(false) })
+        fetch(`https://active-interior-f9hq.onrender.com/construction_projects/${id}`).then(res => res.json()).then(data => { setProject(data); setUsedMaterials(data.used_materials); setLoading(false) })
     }, [reload])
 
     console.log(project)
@@ -58,7 +58,7 @@ const EditProjectDataFormConstruction = () => {
         }
         else {
             setLoading(true);
-            fetch(`http://localhost:3000/construction_projects`, {
+            fetch(`https://active-interior-f9hq.onrender.com/construction_projects`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'

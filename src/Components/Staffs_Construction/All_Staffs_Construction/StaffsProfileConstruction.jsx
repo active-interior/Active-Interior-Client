@@ -18,19 +18,20 @@ const StaffsProfileConstruction = () => {
     const [transectionData, setransectionData] = useState('');
     const [loadingTr, setLoadingTr] = useState(false);
     const [transectionModal, setransectionModal] = useState(false);
+    const [transactionSL, setTransactionSL] = useState(0);
     const location = useLocation();
     const from = location?.state?.pathname;
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs/${staff_id}`)
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${staff_id}`)
             .then(res => res.json())
             .then(data => {
                 setStaff(data);
-                fetch(`http://localhost:3000/construction_projects`).then(res => res.json()).then(data => {
+                fetch(`https://active-interior-f9hq.onrender.com/construction_projects`).then(res => res.json()).then(data => {
                     setProjectsData(data);
-                    setLoading(false)
-                }).then(() => {
-                    setLoading(false);
+                    fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`).then(res => res.json()).then(data => { setTransactionSL(data.sl_no + 1) }).then(() => {
+                        setLoading(false);
+                    })
                 })
             })
     }, [reload])
@@ -184,7 +185,7 @@ const StaffsProfileConstruction = () => {
         const workingDate = attendanceData[0];
 
         const attendance_data = { attendance_data: { date: workingDate, project: attendanceData[1].p_name, shift, income: staffIncome } };
-        const cost_data = { date: workingDate, cost_category: staff?.work_category, cost_description: 'Worker Bill', amount: staffIncome }
+        const cost_data = { date: workingDate, cost_category: staff?.work_category, staff_details: [{name: staff?.staff_name, shift, bill: staffIncome}], cost_description: 'Worker Bill', amount: staffIncome }
         Swal.fire({
             title: `In "${workingDate}" ${staff.staff_name} worked at ${attendanceData[1].p_name}`,
             text: "Are You Sure?",
@@ -203,15 +204,15 @@ const StaffsProfileConstruction = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setLoading(true);
-                fetch(`http://localhost:3000/construction_staffs/${staff._id}`, {
+                fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${staff._id}`, {
                     method: 'PATCH',
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify(attendance_data)
                 }).then(res => res.json()).then(data => {
                     setProjectModal(false);
                     setShiftModal(false);
-                    fetch(`http://localhost:3000/construction_projects/${attendanceData[1].p_id}`, {
-                        method: 'PUT',
+                    fetch(`https://active-interior-f9hq.onrender.com/construction_projects/${attendanceData[1].p_id}`, {
+                        method: 'PATCH',
                         headers: { 'content-type': 'application/json' },
                         body: JSON.stringify(cost_data)
                     }).then(res => res.json()).then(() => {
@@ -254,31 +255,42 @@ const StaffsProfileConstruction = () => {
             month: 'long',
         });
         const transection_data = { transection_data: { date: currentDate, amount: transection_amount * 1, comment: transection_comment } }
-        const expenseData = { date: currentDate, category: 'Staff Payment', reference: staff?.staff_name, amount: transection_amount * 1 };
-        fetch(`http://localhost:3000/construction_staffs/${id}`, {
+        const expenseData = { date: currentDate, category: 'Staff Payment', reference: [transactionSL], amount: transection_amount * 1, type: 'Cash Out' };
+        const expenseTransaction = { transaction_no: transactionSL, date: currentDate, transaction_with: staff?.staff_name, description: transection_comment, category: 'Staff Payment', amount: transection_amount * 1 }
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${id}`, {
             method: 'PATCH',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(transection_data)
         }).then(res => res.json()).then(data => {
-            fetch(`http://localhost:3000/expense_transactions`, {
+            fetch(`https://active-interior-f9hq.onrender.com/expense_transactions`, {
                 method: 'PATCH',
                 headers: {
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(expenseData)
-            }).then(res => res.json()).then(rvData => {
-                setransectionModal(false);
-                setLoadingTr(false);
-                transectionAmmountRef.current.value = '';
-                transectionCommentRef.current.value = '';
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Transection Complete Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    setReload(!reload);
+            }).then(res => res.json()).then(() => {
+                fetch(`https://active-interior-f9hq.onrender.com/expenses`, {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(expenseTransaction)
+                }).then(res => res.json()).then(() => {
+                    fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`, { method: 'PATCH' }).then(() => {
+                        setransectionModal(false);
+                        setLoadingTr(false);
+                        transectionAmmountRef.current.value = '';
+                        transectionCommentRef.current.value = '';
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Transection Complete Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            setReload(!reload);
+                        })
+                    })
                 })
             })
         })
@@ -311,7 +323,7 @@ const StaffsProfileConstruction = () => {
             confirmButtonText: "Yes, Close"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:3000/close_construction_staffs/${id}`, {
+                fetch(`https://active-interior-f9hq.onrender.com/close_construction_staffs/${id}`, {
                     method: 'PATCH',
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify(updateData)
@@ -368,7 +380,7 @@ const StaffsProfileConstruction = () => {
                 />
             </div>
             <div className={`relative ${loading ? 'hidden' : ''}`}>
-                <div className='flex items-center gap-10 text-xl my-10'>
+                <div className='flex flex-wrap items-center justify-between gap-10 text-md my-10'>
                     <Link to={from || '/construction/staffs'} className={`min-w-fit px-3 py-1 rounded-full text-sm transition-all duration-300 border border-[#FFBF00] bg-[#FFBF00] text-black shadow-md flex items-center gap-2 cursor-pointer`}>
                         <FaLongArrowAltLeft /> Back
                     </Link>

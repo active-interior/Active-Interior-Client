@@ -6,7 +6,7 @@ const CreateNewStaffsConstruction = () => {
     const [loading, setLoading] = useState(false);
     const [WC, setWC] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:3000/work_category')
+        fetch('https://active-interior-f9hq.onrender.com/work_category')
             .then(res => res.json())
             .then(data => {
                 setWC(data.work_categories);
@@ -47,7 +47,7 @@ const CreateNewStaffsConstruction = () => {
         }
         else {
             setLoading(true);
-            fetch(`http://localhost:3000/construction_staffs`, {
+            fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'

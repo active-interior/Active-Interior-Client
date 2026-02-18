@@ -4,7 +4,7 @@ import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-const CashInOthers = () => {
+const CashOutPersonalExpenses = () => {
     const [loading, setLoading] = useState(false);
     const [transactionSL, setTransactionSL] = useState(0);
     const navigate = useNavigate();
@@ -29,19 +29,18 @@ const CashInOthers = () => {
 
     const handleSubmit = () => {
         setLoading(true);
-        const payer_name = payerName.current.value;
-        const source_of_income = sourceOfIncome.current.value;
+        const receiver_name = receiverName.current.value;
         const purpose = purposeRef.current.value;
         const payment_method = paymentMethod.current.value;
         const amount = transactionAmount.current.value * 1;
         const date = currentDate;
         const transaction_no = transactionSL;
 
-        const transactionData = { transaction_no, date, payer_name, source_of_income, payment_method, purpose, amount };
-        const reveneuData = { date, category: 'Others Received', reference: [transaction_no], amount, type: "Cash In" };
-        const revenueTransaction = { transaction_no, date: currentDate, transaction_with: payer_name, description: purpose, category: 'Others Received', amount }
+        const transactionData = { transaction_no, date, receiver_name, payment_method, purpose, amount };
+        const expenseData = { date, category: 'Office Expense', reference: [transaction_no], amount, type: "Cash Out" };
+        const expenseTransaction = { transaction_no, date: currentDate, transaction_with: receiver_name, description: purpose, category: 'Office Expense', amount }
 
-        if (!payer_name || !purpose || !source_of_income || !payment_method || !amount) {
+        if (!receiver_name || !purpose || !payment_method || !amount) {
             Swal.fire({
                 position: "center",
                 icon: "warning",
@@ -63,7 +62,7 @@ const CashInOthers = () => {
             cancelButtonText: "No"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`https://active-interior-f9hq.onrender.com/others_received`, {
+                fetch(`https://active-interior-f9hq.onrender.com/personal_expenses`, {
                     method: 'PATCH',
                     headers: {
                         'content-type': 'application/json'
@@ -72,25 +71,25 @@ const CashInOthers = () => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        fetch(`https://active-interior-f9hq.onrender.com/revenue_transactions`, {
+                        fetch(`https://active-interior-f9hq.onrender.com/expense_transactions`, {
                             method: 'PATCH',
                             headers: {
                                 'content-type': 'application/json'
                             },
-                            body: JSON.stringify(reveneuData)
+                            body: JSON.stringify(expenseData)
                         }).then(res => res.json()).then(() => {
-                            fetch(`https://active-interior-f9hq.onrender.com/revenues`, {
+                            fetch(`https://active-interior-f9hq.onrender.com/expenses`, {
                                 method: 'PATCH',
                                 headers: {
                                     'content-type': 'application/json'
                                 },
-                                body: JSON.stringify(revenueTransaction)
+                                body: JSON.stringify(expenseTransaction)
                             }).then(res => res.json()).then(() => {
                                 fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`, { method: 'PATCH' }).then(() => {
                                     Swal.fire({
                                         position: "center",
                                         icon: "success",
-                                        title: "Payment Received Successfully",
+                                        title: "Expense Recorded Successfully",
                                         showConfirmButton: false,
                                         timer: 1500
                                     }).then(() => {
@@ -105,8 +104,7 @@ const CashInOthers = () => {
         });
     }
 
-    const payerName = useRef();
-    const sourceOfIncome = useRef();
+    const receiverName = useRef();
     const purposeRef = useRef();
     const paymentMethod = useRef();
     const transactionAmount = useRef();
@@ -125,8 +123,8 @@ const CashInOthers = () => {
                 />
             </div>
             <div className={`p-7 ${loading ? 'hidden' : ''}`}>
-                <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>Cash In</h1>
-                <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>From Others Received</h1>
+                <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>Cash Out</h1>
+                <h1 className='text-xl text-[#FFBF00] text-center font-semibold'>Personal Expenses</h1>
                 <div>
                     <div className='flex items-center justify-between'>
                         <div>
@@ -138,33 +136,25 @@ const CashInOthers = () => {
                     </div>
                     <div className='flex items-center justify-between gap-14'>
                         <div className='flex flex-col items-start w-full gap-2 mt-4'>
-                            <p className='text-[#FFBF00]'>Payer Name (Myself / Others)</p>
+                            <p className='text-[#FFBF00]'>Receiver Name</p>
                             <div className='px-3 border-2 border-[#FFBF00] rounded-xl h-10 shadow-md shadow-[#FFBF00] w-full flex'>
-                                <input ref={payerName} type="text" className='outline-none w-full' />
+                                <input ref={receiverName} type="text" className='outline-none w-full' />
                             </div>
                         </div>
-                        <div className='flex flex-col items-start w-full gap-2 mt-4'>
-                            <p className='text-[#FFBF00]'>Source of Income</p>
-                            <div className='px-3 border-2 border-[#FFBF00] rounded-xl h-10 shadow-md shadow-[#FFBF00] w-full flex'>
-                                <input ref={sourceOfIncome} type="text" className='outline-none w-full' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='flex items-center justify-between gap-14'>
                         <div className='flex flex-col items-start w-full gap-2 mt-4'>
                             <p className='text-[#FFBF00]'>Payment Method (Bank / Cash / Others)</p>
                             <div className='px-3 border-2 border-[#FFBF00] rounded-xl h-10 shadow-md shadow-[#FFBF00] w-full flex'>
                                 <input ref={paymentMethod} type="text" className='outline-none w-full' />
                             </div>
                         </div>
+                    </div>
+                    <div className='flex items-center justify-between gap-14'>
                         <div className='flex flex-col items-start w-full gap-2 mt-4'>
                             <p className='text-[#FFBF00]'>Purpose of</p>
                             <div className='px-3 border-2 border-[#FFBF00] rounded-xl h-10 shadow-md shadow-[#FFBF00] w-full flex'>
                                 <input ref={purposeRef} type="text" className='outline-none w-full' />
                             </div>
                         </div>
-                    </div>
-                    <div className='flex items-center justify-between gap-14'>
                         <div className='flex flex-col items-start w-full gap-2 mt-4'>
                             <p className='text-[#FFBF00]'>Amount</p>
                             <div className='flex items-center w-full gap-14'>
@@ -194,4 +184,4 @@ const CashInOthers = () => {
     );
 };
 
-export default CashInOthers;
+export default CashOutPersonalExpenses;

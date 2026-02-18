@@ -29,11 +29,11 @@ const StaffsAttendanceConstruction = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`).then(res => res.json()).then(data => {
             setStaffsData(data);
             setLoading(false)
         })
-        fetch(`http://localhost:3000/construction_projects`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_projects`).then(res => res.json()).then(data => {
             setProjectsData(data);
             setLoading(false)
         })
@@ -97,6 +97,7 @@ const StaffsAttendanceConstruction = () => {
         const id = attendanceData[0];
         // const previousData = staffsData.filter(st => st._id === id)[0].staff_working_details;
         const staffSalary = staffsData.filter(st => st._id === id)[0].staff_salary;
+        const cost_category = staffsData.filter(st => st._id === id)[0].work_category;
         const staff_income = (sft) => {
             if (sft === 'Single') {
                 return staffSalary * 1;
@@ -112,17 +113,17 @@ const StaffsAttendanceConstruction = () => {
         const workingDate = attendanceData[2];
 
         const attendance_data = { attendance_data: { date: workingDate, project: attendanceData[1].p_name, shift, income: staffIncome } };
-        const cost_data = { date: workingDate, cost_description: 'Worker Bill', amount: staffIncome }
-        console.log(attendance_data);
-        fetch(`http://localhost:3000/construction_staffs/${id}`, {
+        const cost_data = { date: workingDate, cost_category: staff?.work_category, staff_details: [{name: staff?.staff_name, shift, bill: staffIncome}], cost_description: 'Worker Bill', amount: staffIncome }
+
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${id}`, {
             method: 'PATCH',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(attendance_data)
         }).then(res => res.json()).then(data => {
             setProjectModal(false);
             setShiftModal(false);
-            fetch(`http://localhost:3000/construction_projects/${attendanceData[1].p_id}`, {
-                method: 'PUT',
+            fetch(`https://active-interior-f9hq.onrender.com/construction_projects/${attendanceData[1].p_id}`, {
+                method: 'PATCH',
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify(cost_data)
             }).then(res => res.json()).then(() => {

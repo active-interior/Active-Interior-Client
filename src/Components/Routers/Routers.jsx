@@ -48,76 +48,40 @@ import CashInProject from '../Accounts/CashInProject';
 import CashInLoan from '../Accounts/CashInLoan';
 import CashInInvestment from '../Accounts/CashInInvestment';
 import CashInOthers from '../Accounts/CashInOthers';
+import Revenues from '../Accounts/Revenues';
+import Expenses from '../Accounts/Expenses';
+import RevenuesProjectPayment from '../Accounts/RevenuesProjectPayment';
+import RevenuesLoan from '../Accounts/RevenuesLoan';
+import RevenuesPersonalInvestment from '../Accounts/RevenuesPersonalInvestment';
+import RevenuesOthers from '../Accounts/RevenuesOthers';
+import CashOutPaybackLoan from '../Accounts/CashOutPaybackLoan';
+import CashOutPersonalExpenses from '../Accounts/CashOutPersonalExpenses';
+import CashOutOfficeExpenses from '../Accounts/CashOutOfficeExpenses';
+import CashOutOthers from '../Accounts/CashOutOthers';
+import CashOutMaterialPurchase from '../Accounts/CashOutMaterialPurchase';
+import ExpensesMaterialPurchase from '../Accounts/ExpensesMaterialPurchase';
+import ExpensesPaybackLoans from '../Accounts/ExpensesPaybackLoans';
+import ExpensesOfficeExpenses from '../Accounts/ExpensesOfficeExpenses';
+import ExpensesPersonalExpenses from '../Accounts/ExpensesPersonalExpenses';
+import ExpensesOthers from '../Accounts/ExpensesOthers';
 
 const router = createBrowserRouter([
+    // {
+    //     path: '/',
+    //     element: <Main></Main>,
+    //     children: [
+    //         {
+    //             path: '/',
+    //             element: <Home></Home>,
+    //         }
+    //     ]
+    // },
     {
         path: '/',
-        element: <Main></Main>,
-        children: [
-            {
-                path: '/',
-                element: <Home></Home>,
-            }
-        ]
-    },
-    {
-        path: '/interior',
-        element: <InteriorMain></InteriorMain>,
-        children: [
-            {
-                path: '/interior',
-                element: <InteriorHome></InteriorHome>
-            },
-            {
-                path: '/interior/staffs',
-                element: <StaffsInterior></StaffsInterior>,
-                children: [
-                    {
-                        path: '/interior/staffs',
-                        element: <StaffsHomeInterior></StaffsHomeInterior>
-                    },
-                    {
-                        path: '/interior/staffs/create_new_staffs',
-                        element: <CreateNewStaffsInterior></CreateNewStaffsInterior>
-                    },
-                    {
-                        path: '/interior/staffs/staffs_attendance',
-                        element: <StaffsAttendanceInterior></StaffsAttendanceInterior>
-                    },
-                    {
-                        path: '/interior/staffs/staffs_transections',
-                        element: <StaffsTransectionsInterior></StaffsTransectionsInterior>
-                    },
-                    {
-                        path: '/interior/staffs/staffs_status',
-                        element: <StaffStatusInterior></StaffStatusInterior>
-                    },
-                    {
-                        path: '/interior/staffs/edit_staffs_data',
-                        element: <EditStaffsDataInterior></EditStaffsDataInterior>
-                    }
-                ]
-            },
-            {
-                path: '/interior/projects',
-                element: <Projects_Interior></Projects_Interior>
-            },
-            {
-                path: '/interior/accounts',
-                element: <Accounts></Accounts>
-            },
-            {
-                path: '/interior/settings',
-                element: <Settings></Settings>
-            }
-        ]
-    },
-    {
-        path: '/construction',
         element: <ConstructionMain></ConstructionMain>,
         children: [
             {
-                path: '/construction',
+                path: '/',
                 element: <ConstructionHome></ConstructionHome>
             },
             {
@@ -125,15 +89,19 @@ const router = createBrowserRouter([
                 element: <StaffsConstruction></StaffsConstruction>,
                 children: [
                     {
-                        path: '/construction/staffs/',
+                        path: '/construction/staffs/all_staffs',
                         element: <AllStaffsConstructionHome></AllStaffsConstructionHome>,
                         children: [
                             {
-                                path: '/construction/staffs/:category',
+                                path: '/construction/staffs/all_staffs',
                                 element: <AllStaffsConstruction></AllStaffsConstruction>
                             },
                             {
-                                path: '/construction/staffs/profile/:staff_id',
+                                path: '/construction/staffs/all_staffs/:category',
+                                element: <AllStaffsConstruction></AllStaffsConstruction>
+                            },
+                            {
+                                path: '/construction/staffs/all_staffs/profile/:staff_id',
                                 element: <StaffsProfileConstruction></StaffsProfileConstruction>
                             }
                         ]
@@ -161,7 +129,7 @@ const router = createBrowserRouter([
                     {
                         path: '/construction/staffs/edit_staffs_data',
                         element: <EditStaffsDataConstruction></EditStaffsDataConstruction>,
-                        loader: (() => fetch(`http://localhost:3000/construction_staffs`))
+                        loader: (() => fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`))
                     },
                     {
                         path: '/construction/staffs/edit_staffs_form/:id',
@@ -174,9 +142,9 @@ const router = createBrowserRouter([
                 element: <Projects_Construction></Projects_Construction>,
                 children: [
                     {
-                        path: '/construction/projects/all_projects',
+                        path: '/construction/projects',
                         element: <AllProjectsConstruction></AllProjectsConstruction>,
-                        loader: (() => fetch(`http://localhost:3000/construction_projects`))
+                        loader: (() => fetch(`https://active-interior-f9hq.onrender.com/construction_projects`))
                     },
                     {
                         path: '/construction/projects/create_new_project',
@@ -235,7 +203,7 @@ const router = createBrowserRouter([
                         element: <CashIn></CashIn>,
                         children: [
                             {
-                                path: '/construction/accounts/cash_in/project',
+                                path: '/construction/accounts/cash_in/',
                                 element: <CashInProject></CashInProject>
                             },
                             {
@@ -254,7 +222,77 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/construction/accounts/cash_out',
-                        element: <CashOut></CashOut>
+                        element: <CashOut></CashOut>,
+                        children: [
+                            {
+                                path: '/construction/accounts/cash_out/',
+                                element: <CashOutMaterialPurchase></CashOutMaterialPurchase>
+                            },
+                            {
+                                path: '/construction/accounts/cash_out/payback_loan',
+                                element: <CashOutPaybackLoan></CashOutPaybackLoan>
+                            },
+                            {
+                                path: '/construction/accounts/cash_out/office_expenses',
+                                element: <CashOutOfficeExpenses></CashOutOfficeExpenses>
+                            },
+                            {
+                                path: '/construction/accounts/cash_out/personal_expenses',
+                                element: <CashOutPersonalExpenses></CashOutPersonalExpenses>
+                            },
+                            {
+                                path: '/construction/accounts/cash_out/others',
+                                element: <CashOutOthers></CashOutOthers>
+                            },
+                        ]
+                    },
+                    {
+                        path: '/construction/accounts/revenues',
+                        element: <Revenues></Revenues>,
+                        children: [
+                            {
+                                path: '/construction/accounts/revenues/project_payment',
+                                element: <RevenuesProjectPayment></RevenuesProjectPayment>
+                            },
+                            {
+                                path: '/construction/accounts/revenues/loan',
+                                element: <RevenuesLoan></RevenuesLoan>
+                            },
+                            {
+                                path: '/construction/accounts/revenues/personal_investments',
+                                element: <RevenuesPersonalInvestment></RevenuesPersonalInvestment>
+                            },
+                            {
+                                path: '/construction/accounts/revenues/others',
+                                element: <RevenuesOthers></RevenuesOthers>
+                            },
+                        ]
+                    },
+                    {
+                        path: '/construction/accounts/expenses',
+                        element: <Expenses></Expenses>,
+                        children: [
+                            {
+                                path: '/construction/accounts/expenses/material_purchase',
+                                element: <ExpensesMaterialPurchase></ExpensesMaterialPurchase>
+                            },
+                            {
+                                path: '/construction/accounts/expenses/payback_loans',
+                                element: <ExpensesPaybackLoans></ExpensesPaybackLoans>
+                            },
+                            {
+                                path: '/construction/accounts/expenses/office_expenses',
+                                element: <ExpensesOfficeExpenses></ExpensesOfficeExpenses>
+                            },
+                            {
+                                path: '/construction/accounts/expenses/personal_expenses',
+                                element: <ExpensesPersonalExpenses></ExpensesPersonalExpenses>
+                            },
+                            {
+                                path: '/construction/accounts/expenses/others',
+                                element: <ExpensesOthers></ExpensesOthers>
+                            },
+                        ]
                     }
                 ]
             },

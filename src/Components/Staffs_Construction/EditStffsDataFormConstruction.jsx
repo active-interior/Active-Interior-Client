@@ -10,7 +10,7 @@ const EditStffsDataFormConstruction = () => {
     const navigate = useNavigate();
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs/${id}`)
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${id}`)
             .then(res => res.json())
             .then(data => {
                 setStaff(data)
@@ -44,7 +44,7 @@ const EditStffsDataFormConstruction = () => {
         }
         else {
             setLoading(true);
-            fetch(`http://localhost:3000/construction_staffs_edit_form/${id}`, {
+            fetch(`https://active-interior-f9hq.onrender.com/construction_staffs_edit_form/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'content-type': 'application/json'

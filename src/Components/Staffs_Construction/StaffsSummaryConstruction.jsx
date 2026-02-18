@@ -54,7 +54,7 @@ const StaffsSummaryConstruction = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`).then(res => res.json()).then(data => {
             setStaffsData(data);
             setLoading(false)
         })
@@ -171,7 +171,7 @@ const StaffsSummaryConstruction = () => {
                             })}
                         </div>
                         <div id='scrollbar-x' className={`transition-all duration-500 ease-in-out pb-5 h-fit overflow-x-scroll grid`}>
-                            <table className="border-collapse min-w-max text-md">
+                            <table className="border-collapse min-w-max text-sm">
                                 <thead>
                                     <tr className="text-[#FFBF00]">
                                         <th className="border p-2">Name</th>

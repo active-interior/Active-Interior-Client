@@ -12,7 +12,7 @@ const ChangeProjectsStatusConstruction = () => {
     const [reload, setReload] = useState(false);
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_projects`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_projects`).then(res => res.json()).then(data => {
             setProjectsData(data);
             setLoading(false)
         })
@@ -28,7 +28,7 @@ const ChangeProjectsStatusConstruction = () => {
             confirmButtonText: "Yes, Change"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:3000/construction_projects_status/${id}`, {
+                fetch(`https://active-interior-f9hq.onrender.com/construction_projects_status/${id}`, {
                     method: 'PATCH',
                     headers: {
                         'content-type': 'application/json'

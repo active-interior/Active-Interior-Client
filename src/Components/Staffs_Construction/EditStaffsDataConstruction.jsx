@@ -13,14 +13,14 @@ const EditStaffsDataConstruction = () => {
     const [reload, setReload] = useState(false);
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`).then(res => res.json()).then(data => {
             setStaffsData(data);
             setLoading(false)
         })
     }, [reload])
     const handleDelete = (id) => {
         console.log(id)
-        fetch(`http://localhost:3000/construction_staffs/${id}`, {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${id}`, {
             method: 'DELETE'
         }).then(res => res.json()).then(data => {
             Swal.fire({

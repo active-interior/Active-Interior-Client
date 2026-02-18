@@ -11,16 +11,16 @@ const AllStaffsConstructionHome = () => {
     const location = useLocation();
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:3000/work_category').then(res => res.json()).then(data => {
+        fetch('https://active-interior-f9hq.onrender.com/work_category').then(res => res.json()).then(data => {
             setCategories(data.work_categories);
-            if(!tab && location.pathname === '/construction/staffs') {
+            if(!tab && location.pathname === '/construction/staffs/all_staffs') {
                 setTab(data.work_categories[0])
             }
         }).then(() => {
-            fetch(`http://localhost:3000/construction_staffs`).then(res => res.json()).then(data => {
+            fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`).then(res => res.json()).then(data => {
                 setStaffsData(data);
             }).then(() => {
-                fetch(`http://localhost:3000/construction_projects`).then(res => res.json()).then(data => {
+                fetch(`https://active-interior-f9hq.onrender.com/construction_projects`).then(res => res.json()).then(data => {
                     setProjectsData(data);
                 }).then(() => {
                     setLoading(false)
@@ -47,7 +47,7 @@ const AllStaffsConstructionHome = () => {
 
                 <div className="flex gap-5 overflow-x-auto mb-4 px-2 pb-2 mt-5">
                     {
-                        categories.map((cat, index) => <NavLink key={index} to={`/construction/staffs/${cat}`} onClick={() => { setTab(cat) }} className={({ isActive }) => isActive || (tab === cat) ? 'border border-[#FFBF00] px-4 py-1 rounded-full text-sm font-medium transition-all duration-300 bg-[#FFBF00] text-black' : 'border border-[#FFBF00] px-4 py-1 rounded-full text-sm font-medium transition-all duration-300 text-[#FFBF00] hover:bg-[#FFBF00] hover:text-black'}>{cat}</NavLink>)
+                        categories.map((cat, index) => <NavLink key={index} to={`/construction/staffs/all_staffs/${cat}`} onClick={() => { setTab(cat) }} className={({ isActive }) => isActive || (tab === cat) ? 'border border-[#FFBF00] px-4 py-1 rounded-full text-sm font-medium transition-all duration-300 bg-[#FFBF00] text-black' : 'border border-[#FFBF00] px-4 py-1 rounded-full text-sm font-medium transition-all duration-300 text-[#FFBF00] hover:bg-[#FFBF00] hover:text-black'}>{cat}</NavLink>)
                     }
                 </div>
 

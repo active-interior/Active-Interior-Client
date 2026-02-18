@@ -11,7 +11,7 @@ const CompletedProjectsConstruction = () => {
     const location = useLocation();
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_projects`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_projects`).then(res => res.json()).then(data => {
             setProjectsData(data);
             setLoading(false)
         })

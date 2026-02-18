@@ -14,6 +14,7 @@ const StaffsTransectionsConstruction = () => {
     const [staffsData, setStaffsData] = useState([]);
     const [transectionData, setransectionData] = useState('');
     const navigate = useNavigate();
+    const [transactionSL, setTransactionSL] = useState(0);
     const [tabs, setTabs] = useState('Electric');
     const Electric = staffsData.filter(s => s.work_category === 'Electric');
     const Sanitary = staffsData.filter(s => s.work_category === 'Sanitary');
@@ -31,9 +32,11 @@ const StaffsTransectionsConstruction = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetch(`http://localhost:3000/construction_staffs`).then(res => res.json()).then(data => {
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs`).then(res => res.json()).then(data => {
             setStaffsData(data);
-            setLoading(false)
+            fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`).then(res => res.json()).then(data => { setTransactionSL(data.sl_no + 1) }).then(() => {
+                setLoading(false);
+            })
         })
     }, [reload])
 
@@ -56,23 +59,43 @@ const StaffsTransectionsConstruction = () => {
             month: 'long',
         });
         const transection_data = { transection_data: { date: currentDate, amount: transection_amount * 1, comment: transection_comment } }
-        fetch(`http://localhost:3000/construction_staffs/${id}`, {
+        const expenseData = { date: currentDate, category: 'Staff Payment', reference: [transactionSL], amount: transection_amount * 1, type: 'Cash Out' };
+        const expenseTransaction = { transaction_no: transactionSL, date: currentDate, transaction_with: staff?.staff_name, description: transection_comment, category: 'Staff Payment', amount: transection_amount * 1 }
+        fetch(`https://active-interior-f9hq.onrender.com/construction_staffs/${id}`, {
             method: 'PATCH',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(transection_data)
         }).then(res => res.json()).then(data => {
-            setransectionModal(false);
-            setLoadingTr(false);
-            transectionAmmountRef.current.value = '';
-            transectionCommentRef.current.value = '';
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Transection Complete Successfully",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                setReload(!reload)
+            fetch(`https://active-interior-f9hq.onrender.com/expense_transactions`, {
+                method: 'PATCH',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(expenseData)
+            }).then(res => res.json()).then(() => {
+                fetch(`https://active-interior-f9hq.onrender.com/expenses`, {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(expenseTransaction)
+                }).then(res => res.json()).then(() => {
+                    fetch(`https://active-interior-f9hq.onrender.com/transaction_sl_no`, { method: 'PATCH' }).then(() => {
+                        setransectionModal(false);
+                        setLoadingTr(false);
+                        transectionAmmountRef.current.value = '';
+                        transectionCommentRef.current.value = '';
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Transection Complete Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            setReload(!reload);
+                        })
+                    })
+                })
             })
         })
     }
@@ -103,7 +126,7 @@ const StaffsTransectionsConstruction = () => {
             confirmButtonText: "Yes, Close"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:3000/close_construction_staffs/${id}`, {
+                fetch(`https://active-interior-f9hq.onrender.com/close_construction_staffs/${id}`, {
                     method: 'PATCH',
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify(updateData)

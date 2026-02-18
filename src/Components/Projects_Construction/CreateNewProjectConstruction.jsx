@@ -34,7 +34,7 @@ const CreateNewProjectConstruction = () => {
         const floor_number = floorNumber.current.value;
         const project_budget = projectBudget.current.value;
         const project_cost = [];
-        const projectData = { project_sl, project_name, project_location, survey_date, owner_name, owner_number, officer_name, officer_number, supervisor_name, supervisor_number, project_related_person_name, project_related_person_number, construction_type, current_work_position, foundation_number, roofing_number, floor_number, used_materials: usedMaterials, whats_need: whatNeed, status: true, project_budget, project_cost, project_transaction: [] }
+        const projectData = { project_sl, project_name, project_location, survey_date, owner_name, owner_number, officer_name, officer_number, supervisor_name, supervisor_number, project_related_person_name, project_related_person_number, construction_type, current_work_position, foundation_number, roofing_number, floor_number, used_materials: usedMaterials, whats_need: whatNeed, status: true, project_budget, project_cost, project_transaction: [], materials_purchase: [] }
         console.log(projectData);
         if (project_name === '') {
             Swal.fire({
@@ -48,7 +48,7 @@ const CreateNewProjectConstruction = () => {
         }
         else {
             setLoading(true);
-            fetch(`http://localhost:3000/construction_projects`, {
+            fetch(`https://active-interior-f9hq.onrender.com/construction_projects`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
